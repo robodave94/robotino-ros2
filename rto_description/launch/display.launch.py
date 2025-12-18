@@ -11,7 +11,7 @@ def generate_launch_description():
 
     urdf_tutorial_path = FindPackageShare('rto_description')
     default_model_path = PathJoinSubstitution([urdf_tutorial_path, 'urdf', 'robots', 'rto-3.urdf.xacro'])
-    default_rviz_config_path = PathJoinSubstitution([urdf_tutorial_path, 'config', 'urdf.rviz'])
+    default_rviz_config_path = PathJoinSubstitution([urdf_tutorial_path, 'conf', 'display.rviz'])
 
     # These parameters are maintained for backwards compatibility
     gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],
