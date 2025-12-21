@@ -56,6 +56,7 @@ void CameraROS::imageReceivedEvent(
 		unsigned int height,
 		unsigned int step )
 {
+	(void)dataSize;
 	// Build the Image msg
 	img_msg_.header.stamp = stamp_;
 	sensor_msgs::fillImage(img_msg_, "bgr8", height, width, step, data);

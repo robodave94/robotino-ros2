@@ -42,6 +42,7 @@ void EncoderInputROS::setEncoderPositionCallback(
 		const rto_msgs::srv::SetEncoderPosition::Request::SharedPtr req,
 		const rto_msgs::srv::SetEncoderPosition::Response::SharedPtr res)
 {
+	(void)res;
 	setPosition( req->position, req->velocity );
 
 }

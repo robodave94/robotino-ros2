@@ -21,6 +21,8 @@ public:
 
 	void setTimeStamp(rclcpp::Time stamp);
 
+	// Bring base class overloaded versions into scope
+	using rec::robotino::api2::PowerManagement::readingsEvent;
 
 private:
 	rclcpp::Publisher<rto_msgs::msg::PowerReadings>::SharedPtr power_pub_;

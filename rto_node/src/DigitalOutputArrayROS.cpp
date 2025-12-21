@@ -22,12 +22,12 @@ void DigitalOutputArrayROS::setDigitalValuesCallback( const rto_msgs::msg::Digit
 	int numValues = msg->values.size();
 	if( numValues > 0 )
 	{
-		int values[numValues];
+		std::vector<int> values(numValues);
 
 		for(uint8_t entry = 0; entry < numValues; entry++)
 		{
 			values[entry] = msg->values[entry];
 		}
-		setValues( values, numValues );
+		setValues( values.data(), numValues );
 	}
 }

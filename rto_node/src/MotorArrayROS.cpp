@@ -19,6 +19,7 @@ MotorArrayROS::~MotorArrayROS()
 
 void MotorArrayROS::setParentNode(const rclcpp::Node::SharedPtr parent_node_ptr)
 {
+	(void)parent_node_ptr;
 }
 
 void MotorArrayROS::setTimeStamp(rclcpp::Time stamp)

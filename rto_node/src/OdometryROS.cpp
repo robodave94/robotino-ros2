@@ -42,6 +42,7 @@ auto createQuaternionMsgFromYaw(double yaw)
 void OdometryROS::readingsEvent(double x, double y, double phi,
 		float vx, float vy, float omega, unsigned int sequence )
 {
+	(void)sequence;
 	geometry_msgs::msg::Quaternion phi_quat = createQuaternionMsgFromYaw( phi );
 
 	// Construct messages
@@ -77,6 +78,7 @@ bool OdometryROS::resetOdometryCallback(
 		rto_msgs::srv::ResetOdometry::Request::SharedPtr req,
 		rto_msgs::srv::ResetOdometry::Response::SharedPtr res)
 {
+	(void)res;
 	set( req->x, req->y, req->phi, true );
 
 	return true;
