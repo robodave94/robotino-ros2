@@ -1,39 +1,82 @@
+import os
+import subprocess
+
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-import pdb
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
-    ld = LaunchDescription()
+    pkg_share = get_package_share_directory('rto_description')
+    default_model_path = os.path.join(pkg_share, 'urdf', 'robots', 'rto-3.urdf.xacro')
+    default_rviz_config_path = os.path.join(pkg_share, 'conf', 'display.rviz')
 
-    urdf_tutorial_path = FindPackageShare('rto_description')
-    default_model_path = PathJoinSubstitution([urdf_tutorial_path, 'urdf', 'robots', 'rto-3.urdf.xacro'])
-    default_rviz_config_path = PathJoinSubstitution([urdf_tutorial_path, 'conf', 'display.rviz'])
+    model_arg = DeclareLaunchArgument(
+        name='model',
+        default_value=default_model_path,
+        description='Absolute path to robot xacro/urdf file',
+    )
+    rviz_arg = DeclareLaunchArgument(
+        name='rvizconfig',
+        default_value=default_rviz_config_path,
+        description='Absolute path to rviz config file',
+    )
+    gui_arg = DeclareLaunchArgument(
+        name='gui',
+        default_value='true',
+        choices=['true', 'false'],
+        description='Flag to enable joint_state_publisher_gui',
+    )
 
-    # These parameters are maintained for backwards compatibility
-    gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],
-                                    description='Flag to enable joint_state_publisher_gui')
-    ld.add_action(gui_arg)
-    rviz_arg = DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
-                                     description='Absolute path to rviz config file')
-    ld.add_action(rviz_arg)
+    def launch_nodes(context):
+        model_path = context.perform_substitution(
+            __import__('launch').substitutions.LaunchConfiguration('model')
+        )
+        rviz_config = context.perform_substitution(
+            __import__('launch').substitutions.LaunchConfiguration('rvizconfig')
+        )
+        use_gui = context.perform_substitution(
+            __import__('launch').substitutions.LaunchConfiguration('gui')
+        )
 
-    # This parameter has changed its meaning slightly from previous versions
-    ld.add_action(DeclareLaunchArgument(name='model', default_value=default_model_path,
-                                        description='Path to robot urdf file relative to urdf_tutorial package'))
+        # Process xacro if needed, otherwise read URDF directly
+        if model_path.endswith('.xacro'):
+            robot_description = subprocess.check_output(['xacro', model_path], text=True)
+        else:
+            with open(model_path, 'r') as f:
+                robot_description = f.read()
 
-    l_args = {
-            'urdf_package': 'rto_description',
-            'urdf_package_path': LaunchConfiguration('model'),
-            'rviz_config': LaunchConfiguration('rvizconfig'),
-            'jsp_gui': LaunchConfiguration('gui')}
+        nodes = [
+            Node(
+                package='robot_state_publisher',
+                executable='robot_state_publisher',
+                parameters=[{'robot_description': robot_description}],
+            ),
+            Node(
+                package='rviz2',
+                executable='rviz2',
+                arguments=['-d', rviz_config],
+                output='screen',
+            ),
+        ]
 
-    ld.add_action(IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'display.launch.py'])),
-        launch_arguments=l_args.items()
-    ))
+        # Add joint_state_publisher_gui if available and requested
+        if use_gui == 'true':
+            try:
+                get_package_share_directory('joint_state_publisher_gui')
+                nodes.append(Node(
+                    package='joint_state_publisher_gui',
+                    executable='joint_state_publisher_gui',
+                ))
+            except Exception:
+                pass
 
-    return ld
+        return nodes
+
+    return LaunchDescription([
+        model_arg,
+        rviz_arg,
+        gui_arg,
+        OpaqueFunction(function=launch_nodes),
+    ])
