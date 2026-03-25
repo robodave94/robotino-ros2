@@ -13,9 +13,13 @@ setup(
         ('share/' + package_name, ['package.xml']),
         # ... Other data files
         # Include all launch files.
-        ('share/' + package_name, ['launch/rto_bringup_launch.py']), 
-        ('share/' + package_name, ['launch/rto_rviz_launch.py']),
-        ('share/' + package_name, ['rviz/rto_config.rviz']), 
+        ('share/' + package_name, ['launch/py_rto_bringup_launch.py']),
+        ('share/' + package_name, ['launch/py_rto_teleop_launch.py']),
+        ('share/' + package_name, ['launch/py_rto_rviz_launch.py']),
+        ('share/' + package_name, ['launch/rto_bringup.launch']),
+        ('share/' + package_name, ['launch/rto_teleop.launch']),
+        ('share/' + package_name, ['launch/rto_rviz.launch']),
+        ('share/' + package_name, ['rviz/rto_config.rviz']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

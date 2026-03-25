@@ -1,0 +1,34 @@
+<launch>
+
+  <!-- Path to the robot xacro/urdf file -->
+  <arg name="model"
+       default="$(find-pkg-share rto_description)/urdf/robots/rto-3.urdf.xacro"
+       description="Absolute path to robot xacro/urdf file"/>
+
+  <!-- Path to the RViz config file -->
+  <arg name="rvizconfig"
+       default="$(find-pkg-share rto_description)/conf/display.rviz"
+       description="Absolute path to rviz config file"/>
+
+  <!-- Enable joint_state_publisher_gui -->
+  <arg name="gui" default="true" description="Flag to enable joint_state_publisher_gui"/>
+
+  <!-- Publish 3D pose of each link from joint states -->
+  <node pkg="robot_state_publisher" exec="robot_state_publisher">
+    <param name="robot_description" value="$(command xacro $(var model))"/>
+  </node>
+
+  <!-- RViz visualization -->
+  <node pkg="rviz2" exec="rviz2" output="screen"
+        args="-d $(var rvizconfig)"/>
+
+  <!-- Interactive joint state publisher (only when gui:=true) -->
+  <!--
+    NOTE: Unlike the Python version which silently skips this node when
+    joint_state_publisher_gui is not installed, this launch file will
+    fail if the package is missing and gui is true.
+  -->
+  <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"
+        if="$(var gui)"/>
+
+</launch>

@@ -1,0 +1,19 @@
+<launch>
+
+  <!-- Robot IP address -->
+  <arg name="hostname" default="172.26.1.1" description="Robotino IP Address"/>
+  <!-- Robot namespace -->
+  <arg name="ns" default="rto3" description="Robot namespace"/>
+
+  <!-- Core robotino node -->
+  <node pkg="rto_node" exec="rto_node" name="rto_core" namespace="$(var ns)">
+    <param name="hostname" value="$(var hostname)"/>
+    <remap from="/rto_joint_states" to="/joint_states"/>
+  </node>
+
+  <!-- Laser rangefinder node -->
+  <node pkg="rto_node" exec="rto_laserrangefinder_node" name="rto_laser" namespace="$(var ns)">
+    <param name="hostname" value="$(var hostname)"/>
+  </node>
+
+</launch>

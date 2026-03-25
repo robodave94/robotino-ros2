@@ -9,17 +9,22 @@ def generate_launch_description():
         DeclareLaunchArgument("hostname",
                                default_value = "172.26.1.1",
                                description="Robotino IP Address"),
+        DeclareLaunchArgument("ns",
+                               default_value = "rto3",
+                               description="Robot namespace"),
         Node(
             package='rto_node',
-            namespace='rto3',
+            namespace=LaunchConfiguration("ns"),
             executable='rto_node',
             name='rto_core',
             parameters=[{'hostname': LaunchConfiguration("hostname")}],
-            remappings=[('/rto_joint_states', '/joint_states')]
+            remappings=[
+                ('/rto_joint_states', '/joint_states'),
+            ]
         ),
         Node(
             package='rto_node',
-            namespace='rto3',
+            namespace=LaunchConfiguration("ns"),
             executable='rto_laserrangefinder_node',
             name='rto_laser',
             parameters=[{'hostname': LaunchConfiguration("hostname")}]
