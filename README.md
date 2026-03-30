@@ -71,3 +71,8 @@ These can be overridden at launch:
 ```bash
 ros2 launch rto_bringup rto_bringup.launch max_linear_vel:=1.0 max_angular_vel:=0.5
 ```
+
+## TODO::
+<!-- (ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/rto3/cmd_vel) -->
+
+currently needed to operate teleop twist properly, also need to parse/find speed limits to match the limits of the RTO defined in the cpp driver
