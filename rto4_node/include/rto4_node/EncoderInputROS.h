@@ -1,0 +1,42 @@
+/*
+ * EncoderInputROS.h
+ *
+ *  Created on: 09.12.2011
+ *      Author: indorewala@servicerobotics.eu
+ */
+
+#ifndef ENCODERINPUTROS_H_
+#define ENCODERINPUTROS_H_
+
+#include "rec/robotino/api2/EncoderInput.h"
+
+#include "rclcpp/rclcpp.hpp"
+#include "rto4_msgs/msg/encoder_readings.hpp"
+#include "rto4_msgs/srv/set_encoder_position.hpp"
+
+
+class EncoderInputROS: public rec::robotino::api2::EncoderInput
+{
+public:
+	EncoderInputROS(rclcpp::Node* parent_node);
+	~EncoderInputROS();
+
+	void setTimeStamp(rclcpp::Time stamp);
+
+private:
+	rclcpp::Publisher<rto4_msgs::msg::EncoderReadings>::SharedPtr encoder_pub_;
+
+	rclcpp::Service<rto4_msgs::srv::SetEncoderPosition>::SharedPtr encoder_position_server_;
+
+	rto4_msgs::msg::EncoderReadings encoder_msg_;
+
+	rclcpp::Time stamp_;
+
+	void readingsChangedEvent( int velocity, int position, float current );
+
+	void setEncoderPositionCallback(
+			const rto4_msgs::srv::SetEncoderPosition::Request::SharedPtr req,
+			const rto4_msgs::srv::SetEncoderPosition::Response::SharedPtr res);
+};
+
+#endif /* ENCODERINPUTROS_H_ */

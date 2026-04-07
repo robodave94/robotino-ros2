@@ -4,7 +4,7 @@ This repository contains code for packages that enable ROS 2 support for the **F
 
 This repo is verified to work on Ubuntu 20.04 LTS with ROS2 Foxy and Ubuntu 24.04 LTS with ROS2 Jazzy.
 
-The original code was taken from [dietriro's robotino repository](https://github.com/dietriro/rto_core) and adapted for ROS2
+The original code was taken from [dietriro's robotino repository](https://github.com/dietriro/rto4_core) and adapted for ROS2
 
 **Note:** Not all functionality has been enabled. North Star support, BHA support, and gripper support have been disabled.
 
@@ -21,7 +21,7 @@ The original code was taken from [dietriro's robotino repository](https://github
 ### 1. Bring up the robot
 
 ```bash
-ros2 launch rto_bringup rto_bringup.launch hostname:=<robotino_ip> [ns:=rto3]
+ros2 launch rto4_bringup rto4_bringup.launch hostname:=<robotino_ip> [ns:=rto3]
 ```
 
 | Argument | Default | Description |
@@ -34,7 +34,7 @@ ros2 launch rto_bringup rto_bringup.launch hostname:=<robotino_ip> [ns:=rto3]
 In a separate terminal:
 
 ```bash
-ros2 launch rto_bringup rto_teleop.launch [ns:=rto3]
+ros2 launch rto4_bringup rto4_teleop.launch [ns:=rto3]
 ```
 
 The `ns` argument must match the namespace used in the bringup launch. `teleop_twist_keyboard` will open in the same terminal — use the standard keys to drive:
@@ -52,12 +52,12 @@ The `ns` argument must match the namespace used in the bringup launch. `teleop_t
 ### 3. Launch RViz visualisation
 
 ```bash
-ros2 launch rto_bringup rto_rviz.launch
+ros2 launch rto4_bringup rto4_rviz.launch
 ```
 
 ## Velocity limits
 
-Default velocity limits configured in `rto_node`:
+Default velocity limits configured in `rto4_node`:
 
 | Parameter | Default | Description |
 |---|---|---|
@@ -69,7 +69,7 @@ Default velocity limits configured in `rto_node`:
 These can be overridden at launch:
 
 ```bash
-ros2 launch rto_bringup rto_bringup.launch max_linear_vel:=1.0 max_angular_vel:=0.5
+ros2 launch rto4_bringup rto4_bringup.launch max_linear_vel:=1.0 max_angular_vel:=0.5
 ```
 
 ## TODO::

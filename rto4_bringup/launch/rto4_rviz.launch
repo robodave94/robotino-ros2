@@ -1,0 +1,41 @@
+<launch>
+
+  <!-- Path to the robot URDF file -->
+  <arg name="urdf_model"
+       default="$(find-pkg-share rto4_description)/urdf/rover/base.urdf.xacro"
+       description="Absolute path to robot urdf file"/>
+
+  <!-- Path to the RViz config file -->
+  <arg name="rviz_config_file"
+       default="$(find-pkg-share rto4_bringup)/rviz/rto4_config.rviz"
+       description="Full path to the RVIZ config file to use"/>
+
+  <!-- Enable joint_state_publisher_gui -->
+  <arg name="gui" default="true"
+       description="Flag to enable joint_state_publisher_gui"/>
+
+  <!-- Whether to start RViz -->
+  <arg name="use_rviz" default="true"
+       description="Whether to start RVIZ"/>
+
+  <!-- Use simulation (Gazebo) clock -->
+  <arg name="use_sim_time" default="false"
+       description="Use simulation (Gazebo) clock if true"/>
+
+  <!-- Subscribe to joint states and publish 3D pose of each link -->
+  <node pkg="robot_state_publisher" exec="robot_state_publisher">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+    <param name="robot_description"
+           value="$(command 'xacro $(var urdf_model)')"/>
+  </node>
+
+  <!-- Launch RViz -->
+  <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen"
+        if="$(var use_rviz)"
+        args="-d $(var rviz_config_file)"/>
+
+  <!-- Interactive joint state publisher (only when gui:=true) -->
+  <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"
+        if="$(var gui)"/>
+
+</launch>

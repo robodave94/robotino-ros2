@@ -1,0 +1,48 @@
+<launch>
+
+  <!-- Robot connection -->
+  <arg name="hostname" default="172.26.1.1" description="Robotino4 IP Address"/>
+  <arg name="ns" default="rto4" description="Robot namespace"/>
+
+  <!-- Sensor enable/disable flags (all true by default) -->
+  <arg name="enable_odometry" default="true" description="Enable odometry node"/>
+  <arg name="enable_laser" default="true" description="Enable laser rangefinder node"/>
+  <arg name="enable_camera" default="true" description="Enable RGB camera node"/>
+  <arg name="enable_rviz" default="false" description="Launch RViz alongside bringup"/>
+
+  <!-- Robot state publisher (URDF) -->
+  <node pkg="robot_state_publisher" exec="robot_state_publisher" namespace="$(var ns)">
+    <param name="robot_description"
+           value="$(command 'xacro $(find-pkg-share rto4_description)/urdf/rover/base.urdf.xacro')"/>
+  </node>
+
+  <!-- Core robotino node (bumper, distance sensors, gyroscope, motors, drive, power, analog/digital I/O, encoders) -->
+  <node pkg="rto4_node" exec="rto4_node" name="rto4_core" namespace="$(var ns)">
+    <param name="hostname" value="$(var hostname)"/>
+    <remap from="/rto4_joint_states" to="/joint_states"/>
+  </node>
+
+  <!-- Odometry node -->
+  <node pkg="rto4_node" exec="rto4_odometry_node" name="rto4_odometry" namespace="$(var ns)"
+        if="$(var enable_odometry)">
+    <param name="hostname" value="$(var hostname)"/>
+  </node>
+
+  <!-- Laser rangefinder node -->
+  <node pkg="rto4_node" exec="rto4_laserrangefinder_node" name="rto4_laser" namespace="$(var ns)"
+        if="$(var enable_laser)">
+    <param name="hostname" value="$(var hostname)"/>
+  </node>
+
+  <!-- RGB camera node -->
+  <node pkg="rto4_node" exec="rto4_camera_node" name="rto4_camera" namespace="$(var ns)"
+        if="$(var enable_camera)">
+    <param name="hostname" value="$(var hostname)"/>
+  </node>
+
+  <!-- RViz (optional) -->
+  <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen"
+        if="$(var enable_rviz)"
+        args="-d $(find-pkg-share rto4_bringup)/rviz/rto4_config.rviz"/>
+
+</launch>

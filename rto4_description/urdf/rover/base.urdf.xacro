@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<robot name="robotino4_barebones_body" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find rto4_description)/urdf/util/common_properties.xacro" />
+  <!-- *************************** Base Footprint ***************************** -->
+  <link name="base_footprint">
+  </link>
+  <!-- ************************************************************************ -->
+
+  <!-- ****************************** Main Body ******************************* -->
+  <link name="base_link">
+
+    <visual>
+      <origin xyz="0 0 0.035" rpy="0 0 ${pi / 2}"/>
+      <geometry>
+        <mesh filename="package://rto4_description/meshes/rover/rto4_body.dae" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0.035" rpy="0 0 ${pi / 2}"/>
+      <geometry>
+        <mesh filename="package://rto4_description/meshes/rover/rto4_body.dae" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="20"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <!-- ========= Main Body - Joint ========= -->
+  <joint name="base_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+  <!-- ************************************************************************ -->
+  
+  <!-- ***************************** Wheel Macro ****************************** --> 
+  <xacro:macro name="wheel_link" params="number">
+
+    <link name="wheel${number}_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rto4_description/meshes/rover/rto4_wheel.dae" scale="0.01 0.01 0.01"/>
+        </geometry>
+      </visual>
+  
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://rto4_description/meshes/rover/rto4_wheel.dae" scale="0.01 0.01 0.01"/>
+        </geometry>
+      </collision>
+      
+      <inertial>
+        <mass value="0.00001"/>
+        <origin xyz="0 0 0"/>
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      </inertial>
+    </link>
+
+  </xacro:macro>
+ 
+  <xacro:wheel_link number="0" />
+  <xacro:wheel_link number="1" /> 
+  <xacro:wheel_link number="2" />
+
+  <!-- ========== Wheel 0 - Joint ========== --> 
+  <joint name="wheel0_joint" type="fixed">   <!--<joint name="wheel0_joint" type="continuous"></joint> --> 
+    <parent link="base_link"/>
+    <child link="wheel0_link"/>
+    <origin xyz="-0.1825 -0.0001 0.059154" rpy="0 0 ${pi / 2}"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>	
+  </joint>
+
+  <!-- ========== Wheel 1 - Joint ========== --> 
+  <joint name="wheel1_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="wheel1_link"/>
+    <origin xyz="0.090625 -0.157067 0.059154" rpy="0 0 ${(30 * (pi/2)) / 90}"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>	
+  </joint>
+
+  <!-- ========== Wheel 2 - Joint ========== --> 
+  <joint name="wheel2_joint" type="fixed"> 
+    <parent link="base_link"/>
+    <child link="wheel2_link"/>
+    <origin xyz="0.090625 0.156867 0.059154" rpy="0 0 ${-(30 * (pi/2)) / 90}"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>	
+  </joint> 
+  <!-- ************************************************************************ -->
+
+</robot>
