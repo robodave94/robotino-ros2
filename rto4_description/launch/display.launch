@@ -11,7 +11,7 @@
        description="Absolute path to rviz config file"/>
 
   <!-- Enable joint_state_publisher_gui -->
-  <arg name="gui" default="false" description="Flag to enable joint_state_publisher_gui"/>
+  <arg name="gui" default="true" description="Flag to enable joint_state_publisher_gui"/>
 
   <!-- Publish 3D pose of each link from joint states -->
   <node pkg="robot_state_publisher" exec="robot_state_publisher">
