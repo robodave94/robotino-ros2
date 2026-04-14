@@ -15,8 +15,14 @@ RTOLaserRangeFinderNode::RTOLaserRangeFinderNode():
 {
 	this->declare_parameter("hostname", "172.26.1.1");
 	this->declare_parameter("laserRangeFinderNumber", 0);
+	this->declare_parameter("frame_prefix", "");
 	hostname_ = this->get_parameter("hostname").as_string();
 	laserRangeFinderNumber_ = this->get_parameter("laserRangeFinderNumber").as_int();
+
+	std::string fp = this->get_parameter("frame_prefix").as_string();
+	std::string frame_prefix = fp.empty() ? "" : fp + "/";
+	laser_range_finder_.setFramePrefix(frame_prefix);
+
 	std::ostringstream os;
 	os << "LaserRangeFinder" << laserRangeFinderNumber_;
 	com_.setName( os.str() );

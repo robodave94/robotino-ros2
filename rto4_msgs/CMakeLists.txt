@@ -43,6 +43,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/EncoderReadings.msg"
   "srv/ResetOdometry.srv"
   "srv/SetEncoderPosition.srv"
+  "srv/ResetOdometryToFrame.srv"
 
   DEPENDENCIES builtin_interfaces geometry_msgs
 )

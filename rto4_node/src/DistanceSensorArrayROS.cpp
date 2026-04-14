@@ -8,7 +8,8 @@
 #include "DistanceSensorArrayROS.h"
 #include <cmath>
 
-DistanceSensorArrayROS::DistanceSensorArrayROS(rclcpp::Node* parent_node)
+DistanceSensorArrayROS::DistanceSensorArrayROS(rclcpp::Node* parent_node, const std::string& frame_prefix)
+	: frame_prefix_(frame_prefix)
 {
 	distances_pub_ = parent_node->create_publisher<sensor_msgs::msg::PointCloud>("distance_sensors", 10);
 }
@@ -26,7 +27,7 @@ void DistanceSensorArrayROS::distancesChangedEvent(const float* distances, unsig
 {
 	// Build the PointCloud msg
 	distances_msg_.header.stamp = stamp_;
-	distances_msg_.header.frame_id = "base_link";
+	distances_msg_.header.frame_id = frame_prefix_ + "base_link";
 	distances_msg_.points.resize(size);
 
 	for(unsigned int i = 0; i < size; ++i)

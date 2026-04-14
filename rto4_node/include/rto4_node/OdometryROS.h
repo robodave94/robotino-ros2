@@ -17,13 +17,16 @@
 #include "nav_msgs/msg/odometry.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
+#include <string>
+
 class OdometryROS: public rec::robotino::api2::Odometry
 {
 public:
-	OdometryROS(rclcpp::Node* parent_node);
+	OdometryROS(rclcpp::Node* parent_node, const std::string& frame_prefix = "");
 	~OdometryROS();
 
 	void setTimeStamp(rclcpp::Time stamp);
+	void setFramePrefix(const std::string& fp) { frame_prefix_ = fp; }
 
 private:
 	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odometry_pub_;
@@ -35,6 +38,7 @@ private:
 
 	tf2_ros::TransformBroadcaster odometry_transform_broadcaster_;
 
+	std::string frame_prefix_;
 	rclcpp::Time stamp_;
 
 

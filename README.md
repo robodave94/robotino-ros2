@@ -1,5 +1,6 @@
 # RTO-ROS 2
 
+
 This repository contains code for packages that enable ROS 2 support for the **Festo Robotino 3**.
 
 This repo is verified to work on Ubuntu 20.04 LTS with ROS2 Foxy and Ubuntu 24.04 LTS with ROS2 Jazzy.
@@ -75,4 +76,10 @@ ros2 launch rto4_bringup rto4_bringup.launch max_linear_vel:=1.0 max_angular_vel
 ## TODO::
 <!-- (ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/rto3/cmd_vel) -->
 
-currently needed to operate teleop twist properly, also need to parse/find speed limits to match the limits of the RTO defined in the cpp driver
+## Todo:
+ - Odom and sensors implemented, but need to test/evaluate that namespace configs work ok, and using teleop is also ok from the odom stack side of things
+ - build launch file to evaluate namespace config differently
+ - test that bumper sensor runs on bringup through the topic
+ - Test various topics running ok
+ - test power supply readings are running on stack through topic publishing
+ - Test/upgrade the rviz file to additionally read the namespaces properly

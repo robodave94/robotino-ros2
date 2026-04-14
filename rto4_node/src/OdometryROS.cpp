@@ -14,8 +14,9 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-OdometryROS::OdometryROS(rclcpp::Node* parent_node):
-	odometry_transform_broadcaster_(parent_node)
+OdometryROS::OdometryROS(rclcpp::Node* parent_node, const std::string& frame_prefix):
+	odometry_transform_broadcaster_(parent_node),
+	frame_prefix_(frame_prefix)
 {
 	odometry_pub_ = parent_node->create_publisher<nav_msgs::msg::Odometry>("odom", 10);
 
@@ -46,9 +47,9 @@ void OdometryROS::readingsEvent(double x, double y, double phi,
 	geometry_msgs::msg::Quaternion phi_quat = createQuaternionMsgFromYaw( phi );
 
 	// Construct messages
-	odometry_msg_.header.frame_id = "odom";
+	odometry_msg_.header.frame_id = frame_prefix_ + "odom";
 	odometry_msg_.header.stamp = stamp_;
-	odometry_msg_.child_frame_id = "base_link";
+	odometry_msg_.child_frame_id = frame_prefix_ + "base_footprint";
 	odometry_msg_.pose.pose.position.x = x ;
 	odometry_msg_.pose.pose.position.y = y ;
 	odometry_msg_.pose.pose.position.z = 0.0;
@@ -60,9 +61,9 @@ void OdometryROS::readingsEvent(double x, double y, double phi,
 	odometry_msg_.twist.twist.angular.y = 0.0;
 	odometry_msg_.twist.twist.angular.z = omega;
 
-	odometry_transform_.header.frame_id = "odom";
+	odometry_transform_.header.frame_id = frame_prefix_ + "odom";
 	odometry_transform_.header.stamp = odometry_msg_.header.stamp;
-	odometry_transform_.child_frame_id = "base_link";
+	odometry_transform_.child_frame_id = frame_prefix_ + "base_footprint";
 	odometry_transform_.transform.translation.x = x;
 	odometry_transform_.transform.translation.y = y;
 	odometry_transform_.transform.translation.z = 0.0;

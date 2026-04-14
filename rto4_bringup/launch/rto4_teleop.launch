@@ -1,11 +1,9 @@
 <launch>
 
-  <!-- Namespace must match rto4_bringup (must match rto4_node namespace) -->
-  <arg name="ns" default="rto4" description="Namespace matching rto4_bringup (must match rto4_node namespace)"/>
+  <!-- Namespace must match rto4_bringup -->
+  <arg name="ns" default="" description="Namespace matching rto4_bringup"/>
 
-
-  <node pkg="teleop_twist_keyboard" exec="teleop_twist_keyboard" name="teleop_twist_keyboard" output="screen">
-    <remap from="/cmd_vel" to="/$(var ns)/cmd_vel"/>
-  </node>
+  <node pkg="rto4_teleop" exec="keyboard" name="keyboard_teleop" namespace="$(var ns)"
+        output="screen"/>
 
 </launch>

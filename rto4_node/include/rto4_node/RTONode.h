@@ -24,6 +24,7 @@
 #include "sensor_msgs/msg/point_cloud.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
+#include <string>
 
 class RTONode : public rclcpp::Node
 {
@@ -34,6 +35,7 @@ public:
 private:
 	rclcpp::TimerBase::SharedPtr timer_;
 	std::string hostname_;
+	std::string frame_prefix_;
 	double max_linear_vel_, min_linear_vel_, max_angular_vel_, min_angular_vel_;
 	std::vector<float> motor_velocities_;
 	std::vector<int> motor_positions_;

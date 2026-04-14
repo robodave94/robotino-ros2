@@ -1,24 +1,29 @@
 <launch>
 
   <!-- Robot connection -->
-  <arg name="hostname" default="172.26.1.1" description="Robotino4 IP Address"/>
-  <arg name="ns" default="rto4" description="Robot namespace"/>
+  <arg name="hostname" default="192.168.0.1" description="Robotino4 IP Address"/>
+  <!-- <arg name="ns" default="rto4" description="Robot namespace"/> -->
+  <arg name="ns" default="" description="Robot namespace"/>
 
   <!-- Sensor enable/disable flags (all true by default) -->
   <arg name="enable_odometry" default="true" description="Enable odometry node"/>
-  <arg name="enable_laser" default="true" description="Enable laser rangefinder node"/>
+  <!-- Note we have remove the laser from our stack and replaced it with a webcam -->
+  <!-- The depth camera has been replaced with a simple RGB model and the depth camera has been moved -->
+  <!-- To a embedded controller -->
+  <arg name="enable_laser" default="false" description="Enable laser rangefinder node"/>
   <arg name="enable_camera" default="true" description="Enable RGB camera node"/>
   <arg name="enable_rviz" default="false" description="Launch RViz alongside bringup"/>
 
   <!-- Robot state publisher (URDF) -->
   <node pkg="robot_state_publisher" exec="robot_state_publisher" namespace="$(var ns)">
     <param name="robot_description"
-           value="$(command 'xacro $(find-pkg-share rto4_description)/urdf/rover/base.urdf.xacro')"/>
+           value="$(command 'xacro $(find-pkg-share rto4_description)/urdf/rover/base.urdf.xacro prefix:=$(var ns)')"/>
   </node>
 
   <!-- Core robotino node (bumper, distance sensors, gyroscope, motors, drive, power, analog/digital I/O, encoders) -->
   <node pkg="rto4_node" exec="rto4_node" name="rto4_core" namespace="$(var ns)">
     <param name="hostname" value="$(var hostname)"/>
+    <param name="frame_prefix" value="$(var ns)"/>
     <remap from="/rto4_joint_states" to="/joint_states"/>
   </node>
 
@@ -26,12 +31,14 @@
   <node pkg="rto4_node" exec="rto4_odometry_node" name="rto4_odometry" namespace="$(var ns)"
         if="$(var enable_odometry)">
     <param name="hostname" value="$(var hostname)"/>
+    <param name="frame_prefix" value="$(var ns)"/>
   </node>
 
   <!-- Laser rangefinder node -->
   <node pkg="rto4_node" exec="rto4_laserrangefinder_node" name="rto4_laser" namespace="$(var ns)"
         if="$(var enable_laser)">
     <param name="hostname" value="$(var hostname)"/>
+    <param name="frame_prefix" value="$(var ns)"/>
   </node>
 
   <!-- RGB camera node -->

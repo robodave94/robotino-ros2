@@ -31,12 +31,12 @@ static void sigintHandler(int /*sig*/)
 // Constructor / Destructor
 // ---------------------------------------------------------------------------
 KeyboardTeleopRTO::KeyboardTeleopRTO()
-: rclcpp::Node("keyboard", "rto4"),
+: rclcpp::Node("keyboard"),
   speed_(1.0),
   turn_(0.5),
   kfd_(0)
 {
-    // Default namespace "rto3" → resolves to /rto3/cmd_vel
+    // Namespace is set externally via --ros-args -r __ns:=/robot1 or launch namespace=
     cmd_vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 1);
 
     // Declare the same speed-limit parameters as RTONode so they can be

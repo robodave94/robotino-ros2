@@ -21,12 +21,20 @@ void PowerManagementROS::setTimeStamp(rclcpp::Time stamp)
 	stamp_ = stamp;
 }
 
-void PowerManagementROS::readingsEvent(float current, float voltage)
+void PowerManagementROS::readingsEvent(float battery_voltage, float system_current,
+	bool ext_power, int num_chargers, const char* batteryType,
+	bool batteryLow, int batteryLowShutdownCounter)
 {
+	(void)ext_power;
+	(void)num_chargers;
+	(void)batteryType;
+	(void)batteryLow;
+	(void)batteryLowShutdownCounter;
+
 	// Build the PowerReadings msg
 	power_msg_.stamp = rclcpp::Clock().now();
-	power_msg_.current = current;
-	power_msg_.voltage = voltage;
+	power_msg_.current = system_current;
+	power_msg_.voltage = battery_voltage;
 
 	// Publish the msg
 	power_pub_->publish( power_msg_ );

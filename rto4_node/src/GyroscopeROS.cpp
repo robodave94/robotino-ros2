@@ -10,12 +10,13 @@
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
-GyroscopeROS::GyroscopeROS(rclcpp::Node* parent_node)
+GyroscopeROS::GyroscopeROS(rclcpp::Node* parent_node, const std::string& frame_prefix)
+	: frame_prefix_(frame_prefix)
 {
 	imu_pub_ = parent_node->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
 
 	// Pre-fill constant fields
-	imu_msg_.header.frame_id = "base_link";
+	imu_msg_.header.frame_id = frame_prefix_ + "base_link";
 
 	// We only have yaw from gyroscope — mark linear accel as unknown
 	imu_msg_.linear_acceleration_covariance[0] = -1.0;
@@ -43,6 +44,7 @@ void GyroscopeROS::setTimeStamp(rclcpp::Time stamp)
 void GyroscopeROS::gyroscopeExtEvent(float angle, float rate)
 {
 	imu_msg_.header.stamp = stamp_;
+	imu_msg_.header.frame_id = frame_prefix_ + "base_link";
 
 	// Convert yaw angle to quaternion
 	tf2::Quaternion q;

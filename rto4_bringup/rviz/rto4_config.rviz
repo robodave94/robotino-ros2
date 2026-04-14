@@ -54,7 +54,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /rto4/robot_description
+        Value: /robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -125,7 +125,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /rto4/scan
+        Value: /scan
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
@@ -148,7 +148,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /rto4/distance_sensors
+        Value: /distance_sensors
       Use Fixed Frame: true
       Use rainbow: false
       Value: true
@@ -188,7 +188,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /rto4/odom
+        Value: /odom
       Value: true
     - Class: rviz_default_plugins/Image
       Enabled: true
@@ -202,7 +202,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /rto4/image_raw
+        Value: /image_raw
       Value: true
   Enabled: true
   Global Options:

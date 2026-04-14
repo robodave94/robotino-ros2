@@ -28,6 +28,7 @@ RTONode::RTONode():
 	this->declare_parameter("min_linear_vel", 0.02);
 	this->declare_parameter("max_angular_vel", 1.0);
 	this->declare_parameter("min_angular_vel", 0.1);
+	this->declare_parameter("frame_prefix", "");
 
  	hostname_ = this->get_parameter("hostname").as_string();
 	
@@ -35,6 +36,13 @@ RTONode::RTONode():
 	min_linear_vel_ = this->get_parameter("min_linear_vel").as_double();
 	max_angular_vel_ = this->get_parameter("max_angular_vel").as_double();
 	min_angular_vel_ = this->get_parameter("min_angular_vel").as_double();
+
+	std::string fp = this->get_parameter("frame_prefix").as_string();
+	frame_prefix_ = fp.empty() ? "" : fp + "/";
+
+	// Propagate frame prefix to sensor components
+	distance_sensor_array_.setFramePrefix(frame_prefix_);
+	gyroscope_.setFramePrefix(frame_prefix_);
 
 	RCLCPP_INFO(this->get_logger(), "Connecting to Robotino with host IP %s\n", hostname_.c_str());
 
@@ -73,7 +81,7 @@ void RTONode::initModules()
 
 void RTONode::initMsgs()
 {
-	distances_clearing_msg_.header.frame_id = "base_link";
+	distances_clearing_msg_.header.frame_id = frame_prefix_ + "base_link";
 	distances_clearing_msg_.header.stamp = curr_time_;
 	distances_clearing_msg_.points.resize( 720 );
 

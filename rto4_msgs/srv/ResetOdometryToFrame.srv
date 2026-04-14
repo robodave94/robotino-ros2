@@ -1,0 +1,7 @@
+# Reset robot odometry relative to a static world-anchored frame.
+# Only frames published on /tf_static with world or map as ancestor are accepted.
+string reference_frame          # Must be a static TF frame anchored to world/map
+geometry_msgs/Pose pose         # Desired robot pose expressed in reference_frame
+---
+bool success
+string message                  # Error details on failure

@@ -7,7 +7,8 @@
 
 #include "LaserRangeFinderROS.h"
 
-LaserRangeFinderROS::LaserRangeFinderROS()
+LaserRangeFinderROS::LaserRangeFinderROS(const std::string& frame_prefix)
+	: frame_prefix_(frame_prefix)
 {
 	laser_scan_msg_ = sensor_msgs::msg::LaserScan();
 }
@@ -39,7 +40,7 @@ void LaserRangeFinderROS::scanEvent(const rec::robotino::api2::LaserRangeFinderR
 {
 	// Build the LaserScan message
 	laser_scan_msg_.header.stamp = stamp_;
-	laser_scan_msg_.header.frame_id = "laser_link";
+	laser_scan_msg_.header.frame_id = frame_prefix_ + "laser_link";
 
 	laser_scan_msg_.angle_min = scan.angle_min;
 	laser_scan_msg_.angle_max = scan.angle_max;

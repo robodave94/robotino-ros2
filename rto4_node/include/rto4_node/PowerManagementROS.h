@@ -31,6 +31,8 @@ private:
 
 	rclcpp::Time stamp_;
 
-	void readingsEvent(float current, float voltage);
+	void readingsEvent(float battery_voltage, float system_current,
+		bool ext_power, int num_chargers, const char* batteryType,
+		bool batteryLow, int batteryLowShutdownCounter) override;
 };
 #endif /* POWERMANAGEMENTROS_H_ */
