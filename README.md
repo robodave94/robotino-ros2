@@ -6,6 +6,8 @@ This repository contains code for packages that enable ROS 2 support for the **F
 This repo is verified to work on Ubuntu 20.04 LTS with ROS2 Foxy and Ubuntu 24.04 LTS with ROS2 Jazzy.
 
 The original code was taken from [dietriro's robotino repository](https://github.com/dietriro/rto4_core) and adapted for ROS2
+This fork was originally from [Rahul-a-k's repo](https://github.com/rahul-k-a/robotino-ros2)
+In addition, this stack does not use any python, only cpp and xml. The foundation for all development here was possible here is thanks to [Rahul-a-k (forked repo)](https://github.com/rahul-k-a/robotino-ros2) and also [Elena Villalba's repository](https://github.com/elena-villalba/robotino4-ros2), who developed a stack for the robotino4 and nav w/ Python. 
 
 **Note:** Not all functionality has been enabled. North Star support, BHA support, and gripper support have been disabled.
 
