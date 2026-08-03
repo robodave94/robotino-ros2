@@ -58,6 +58,29 @@ The `ns` argument must match the namespace used in the bringup launch. `teleop_t
 ros2 launch rto4_bringup rto4_rviz.launch
 ```
 
+## Description package layout
+
+`rto4_description` exposes the model in two files so it can be reused by
+composition xacros (e.g. mounting external modules like the SwitchLinq RVR):
+
+| File | Role |
+|---|---|
+| `urdf/rover/robotino4.macro.xacro` | Defines the `robotino4` xacro:macro. Include this from composition xacros. Does NOT instantiate the macro. |
+| `urdf/rover/base.urdf.xacro`       | Thin standalone wrapper. Declares a single `prefix` arg and invokes the macro. Use this from launch files, RViz, and simulation. |
+
+### Mounting frames
+
+The macro publishes an extra TF frame for external hardware to bolt to:
+
+| Frame | Parent | Offset (xyz) | Purpose |
+|---|---|---|---|
+| `lower_right_mounting_bolt` | `base_footprint` | `0.0622  -0.0215  0.056` | Reference for modules mounted on the lower-right of the chassis (e.g. the SwitchLinq RVR racking module) |
+
+This replaces the historical
+`ros2 run tf2_ros static_transform_publisher --x 0.0622 --y -0.0215 --z 0.056 --frame-id base_footprint --child-frame-id lower_right_mounting_bolt`
+side-car process — the frame is now part of the published `robot_description`
+so any downstream consumer (RViz, tf2_ros, MoveIt, …) sees it automatically.
+
 ## Velocity limits
 
 Default velocity limits configured in `rto4_node`:

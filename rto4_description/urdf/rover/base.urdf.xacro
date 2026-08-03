@@ -1,120 +1,20 @@
 <?xml version="1.0"?>
+<!-- Standalone entry point for the Robotino 4 model. -->
+<!-- -->
+<!-- This file exposes a single prefix xacro arg and instantiates the -->
+<!-- robotino4 macro (defined in robotino4.macro.xacro) so it can be used -->
+<!-- directly by robot_state_publisher, RViz display launches, and simulation -->
+<!-- launches without any further wrapping. -->
+<!-- -->
+<!-- Composition xacros that need to instantiate the Robotino 4 alongside -->
+<!-- other robots with independent prefixes must include robotino4.macro.xacro -->
+<!-- and invoke the macro themselves. Never include this file, as its default -->
+<!-- macro call would collide with the composition's own instantiations. -->
 <robot name="robotino4_barebones_body" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:arg name="prefix" default=""/>
-    <xacro:include filename="$(find rto4_description)/urdf/util/common_properties.xacro" />
+    <xacro:include filename="$(find rto4_description)/urdf/rover/robotino4.macro.xacro" />
 
-  <!-- ************************** Robotino4 Macro ***************************** -->
-  <xacro:macro name="robotino4" params="prefix:=''">
-    <xacro:property name="frame_ns" value="${prefix + '/' if prefix != '' else ''}" />
-
-  <!-- *************************** Base Footprint ***************************** -->
-  <link name="${frame_ns}base_footprint">
-  </link>
-  <!-- ************************************************************************ -->
-
-  <!-- ****************************** Main Body ******************************* -->
-  <link name="${frame_ns}base_link">
-
-    <visual>
-      <origin xyz="0 0 0.035" rpy="0 0 ${pi / 2}"/>
-      <geometry>
-        <mesh filename="package://rto4_description/meshes/rover/rto4_body.dae" scale="0.01 0.01 0.01"/>
-      </geometry>
-    </visual>
-
-    <collision>
-      <origin xyz="0 0 0.035" rpy="0 0 ${pi / 2}"/>
-      <geometry>
-        <mesh filename="package://rto4_description/meshes/rover/rto4_body.dae" scale="0.01 0.01 0.01"/>
-      </geometry>
-    </collision>
-
-    <inertial>
-      <mass value="20"/>
-      <origin xyz="0 0 0"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
-  </link>
-
-  <!-- ========= Main Body - Joint ========= -->
-  <joint name="${frame_ns}base_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="${frame_ns}base_footprint"/>
-    <child link="${frame_ns}base_link"/>
-  </joint>
-  <!-- ************************************************************************ -->
-  
-  <!-- ***************************** Wheel Macro ****************************** --> 
-  <xacro:macro name="wheel_link" params="prefix_ns number">
-
-    <link name="${prefix_ns}wheel${number}_link">
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <mesh filename="package://rto4_description/meshes/rover/rto4_wheel.dae" scale="0.01 0.01 0.01"/>
-        </geometry>
-      </visual>
-  
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <mesh filename="package://rto4_description/meshes/rover/rto4_wheel.dae" scale="0.01 0.01 0.01"/>
-        </geometry>
-      </collision>
-      
-      <inertial>
-        <mass value="0.00001"/>
-        <origin xyz="0 0 0"/>
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-      </inertial>
-    </link>
-
-  </xacro:macro>
- 
-  <xacro:wheel_link prefix_ns="${frame_ns}" number="0" />
-  <xacro:wheel_link prefix_ns="${frame_ns}" number="1" /> 
-  <xacro:wheel_link prefix_ns="${frame_ns}" number="2" />
-
-  <!-- ========== Wheel 0 - Joint ========== --> 
-  <joint name="${frame_ns}wheel0_joint" type="fixed">   <!--<joint name="wheel0_joint" type="continuous"></joint> --> 
-    <parent link="${frame_ns}base_link"/>
-    <child link="${frame_ns}wheel0_link"/>
-    <origin xyz="-0.1825 -0.0001 0.059154" rpy="0 0 ${pi / 2}"/>
-    <axis xyz="0 1 0" rpy="0 0 0"/>	
-  </joint>
-
-  <!-- ========== Wheel 1 - Joint ========== --> 
-  <joint name="${frame_ns}wheel1_joint" type="fixed">
-    <parent link="${frame_ns}base_link"/>
-    <child link="${frame_ns}wheel1_link"/>
-    <origin xyz="0.090625 -0.157067 0.059154" rpy="0 0 ${(30 * (pi/2)) / 90}"/>
-    <axis xyz="0 1 0" rpy="0 0 0"/>	
-  </joint>
-
-  <!-- ========== Wheel 2 - Joint ========== --> 
-  <joint name="${frame_ns}wheel2_joint" type="fixed"> 
-    <parent link="${frame_ns}base_link"/>
-    <child link="${frame_ns}wheel2_link"/>
-    <origin xyz="0.090625 0.156867 0.059154" rpy="0 0 ${-(30 * (pi/2)) / 90}"/>
-    <axis xyz="0 1 0" rpy="0 0 0"/>	
-  </joint> 
-  <!-- ************************************************************************ -->
-
-  <!-- ****************************** Laser Link ****************************** -->
-  <link name="${frame_ns}laser_link">
-  </link>
-
-  <joint name="${frame_ns}laser_joint" type="fixed">
-    <parent link="${frame_ns}base_link"/>
-    <child link="${frame_ns}laser_link"/>
-    <origin xyz="0 0 0.14" rpy="0 0 0"/>
-  </joint>
-  <!-- ************************************************************************ -->
-
-  </xacro:macro>
-
-  <!-- Default instantiation for standalone use -->
-  <xacro:robotino4 prefix="$(arg prefix)" />
+    <xacro:robotino4 prefix="$(arg prefix)" />
 
 </robot>
